@@ -16,3 +16,11 @@ class CategoryOut(CategoryBase):
     restaurant_id: UUID
 
     model_config = ConfigDict(from_attributes=True)
+
+
+from app.schemas.menu_item import MenuItemOut
+
+
+class CategoryWithMenuItems(CategoryOut):
+    menu_items: list[MenuItemOut] = []
+
