@@ -28,7 +28,8 @@ class RestaurantBase(BaseModel):
 
 
 class RestaurantCreate(RestaurantBase):
-    owner_id: UUID
+    pass
+
 
 
 class RestaurantOut(RestaurantBase):

@@ -18,6 +18,7 @@ class MenuItem(Base):
     is_available = Column(Boolean, default=True)
 
     preparation_time_minutes = Column(Integer, nullable=True)
+    image_url = Column(String, nullable=True)
 
     restaurant_id = Column(UUID(as_uuid=True), ForeignKey("restaurants.id", ondelete="CASCADE"), nullable=False)
     category_id = Column(UUID(as_uuid=True), ForeignKey("categories.id", ondelete="SET NULL"), nullable=True)

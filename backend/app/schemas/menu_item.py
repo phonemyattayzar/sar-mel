@@ -8,6 +8,8 @@ class MenuItemBase(BaseModel):
     price_mmk: int
     is_available: bool = True
     preparation_time_minutes: int | None = None
+    image_url: str | None = None
+
 
 
 class MenuItemCreate(MenuItemBase):

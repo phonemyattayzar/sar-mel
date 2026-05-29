@@ -3,6 +3,8 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.db.session import get_session
+from app.api.deps import get_current_user
+from app.models.user import User
 from app.schemas.category import CategoryCreate, CategoryOut
 from app.crud.crud_category import create_category, get_categories_by_restaurant
 from app.crud.crud_restaurant import get_restaurant
@@ -18,6 +20,7 @@ router = APIRouter(prefix="/categories", tags=["categories"])
 def create_new_category(
     category_in: CategoryCreate,
     db: Session = Depends(get_session),
+    current_user: User = Depends(get_current_user),
 ):
     # Verify restaurant exists
     restaurant = get_restaurant(db=db, restaurant_id=category_in.restaurant_id)
@@ -26,7 +29,16 @@ def create_new_category(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Restaurant not found",
         )
+
+    # Verify ownership
+    if restaurant.owner_id != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You don't have permission to modify this restaurant's menu",
+        )
+
     return create_category(db=db, category_in=category_in)
+
 
 
 @router.get(

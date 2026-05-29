@@ -4,6 +4,8 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 
 from app.db.session import get_session
+from app.api.deps import get_current_user
+from app.models.user import User
 from app.schemas.restaurant import RestaurantCreate, RestaurantOut
 from app.crud.crud_restaurant import (
     create_restaurant,
@@ -22,8 +24,10 @@ router = APIRouter(prefix="/restaurants", tags=["restaurants"])
 def create_new_restaurant(
     restaurant_in: RestaurantCreate,
     db: Session = Depends(get_session),
+    current_user: User = Depends(get_current_user),
 ):
-    return create_restaurant(db=db, restaurant_in=restaurant_in)
+    return create_restaurant(db=db, restaurant_in=restaurant_in, owner_id=current_user.id)
+
 
 
 @router.get(

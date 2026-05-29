@@ -1,5 +1,7 @@
+import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from app.api.v1.api import api_router
 from app.db import base  # Ensure all models are registered
 
@@ -15,8 +17,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Mount static files for uploads
+os.makedirs("static/uploads", exist_ok=True)
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
 # All routes now start with /api/v1
 app.include_router(api_router, prefix="/api/v1")
+
 
 @app.get("/")
 async def root():

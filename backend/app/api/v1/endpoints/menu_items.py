@@ -1,8 +1,13 @@
+import os
+import shutil
+import uuid
 from uuid import UUID
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, File, UploadFile, Request
 from sqlalchemy.orm import Session
 
 from app.db.session import get_session
+from app.api.deps import get_current_user
+from app.models.user import User
 from app.schemas.menu_item import MenuItemCreate, MenuItemOut
 from app.schemas.category import CategoryWithMenuItems
 from app.crud.crud_menu_item import (
@@ -16,6 +21,33 @@ from app.models.category import Category
 
 router = APIRouter(prefix="/menu-items", tags=["menu-items"])
 
+UPLOAD_DIR = "static/uploads"
+os.makedirs(UPLOAD_DIR, exist_ok=True)
+
+
+@router.post("/upload")
+async def upload_menu_item_image(request: Request, file: UploadFile = File(...)):
+    # 1. Validate file extension
+    file_ext = os.path.splitext(file.filename)[1].lower()
+    if file_ext not in [".jpg", ".jpeg", ".png", ".webp", ".gif"]:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Invalid file type. Only image files (.jpg, .jpeg, .png, .webp, .gif) are allowed.",
+        )
+    
+    # 2. Generate a unique filename
+    filename = f"{uuid.uuid4()}{file_ext}"
+    file_path = os.path.join(UPLOAD_DIR, filename)
+    
+    # 3. Save file to disk
+    with open(file_path, "wb") as buffer:
+        shutil.copyfileobj(file.file, buffer)
+        
+    # 4. Return the accessible URL
+    image_url = f"{request.base_url}static/uploads/{filename}"
+    return {"image_url": image_url}
+
+
 
 @router.post(
     "/",
@@ -25,6 +57,7 @@ router = APIRouter(prefix="/menu-items", tags=["menu-items"])
 def create_new_menu_item(
     menu_item_in: MenuItemCreate,
     db: Session = Depends(get_session),
+    current_user: User = Depends(get_current_user),
 ):
     # 1. Verify restaurant exists
     restaurant = get_restaurant(db=db, restaurant_id=menu_item_in.restaurant_id)
@@ -34,7 +67,14 @@ def create_new_menu_item(
             detail="Restaurant not found",
         )
 
-    # 2. If category_id is provided, verify it exists and belongs to the restaurant
+    # 2. Verify ownership
+    if restaurant.owner_id != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="You don't have permission to modify this restaurant's menu",
+        )
+
+    # 3. If category_id is provided, verify it exists and belongs to the restaurant
     if menu_item_in.category_id:
         category = (
             db.query(Category)

@@ -68,4 +68,6 @@ class User(Base):
     "Restaurant",
     back_populates="owner",
     cascade="all, delete-orphan",
-)
+    )
+
+    orders = relationship("Order", back_populates="user", cascade="all, delete-orphan")

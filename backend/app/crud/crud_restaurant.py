@@ -18,9 +18,9 @@ def get_multi_restaurants(db: Session, skip: int = 0, limit: int = 100):
     )
 
 
-def create_restaurant(db: Session, restaurant_in: RestaurantCreate):
+def create_restaurant(db: Session, restaurant_in: RestaurantCreate, owner_id: UUID):
     db_restaurant = Restaurant(
-        owner_id=restaurant_in.owner_id,
+        owner_id=owner_id,
         name=restaurant_in.name,
         description=restaurant_in.description,
         phone_number=restaurant_in.phone_number,

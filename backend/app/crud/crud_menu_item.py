@@ -12,9 +12,11 @@ def create_menu_item(db: Session, menu_item_in: MenuItemCreate) -> MenuItem:
         price_mmk=menu_item_in.price_mmk,
         is_available=menu_item_in.is_available,
         preparation_time_minutes=menu_item_in.preparation_time_minutes,
+        image_url=menu_item_in.image_url,
         restaurant_id=menu_item_in.restaurant_id,
         category_id=menu_item_in.category_id,
     )
+
     db.add(db_menu_item)
     db.commit()
     db.refresh(db_menu_item)
