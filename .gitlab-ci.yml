@@ -7,7 +7,7 @@ stages:
     name: moby/buildkit:rootless
     entrypoint: [""]
   variables:
-    BUILDKITD_FLAGS: --oci-worker-no-process-sandbox --allow-insecure-entitlement security.insecure
+    BUILDKITD_FLAGS: --oci-worker-no-process-sandbox 
     BUILDKIT_EXTRA_OPTS: ""
     TARGET_DOCKER_FILE: Dockerfile
   script:
