@@ -49,7 +49,7 @@ build:backend:
   extends: .template-build
   variables:
     BUILD_CONTEXT_DIR: backend
-    TARGET_IMAGE_NAME: "sar-mel/frontend"
+    TARGET_IMAGE_NAME: "sar-mel/backend"
     TARGET_IMAGE_TAG: "${CI_COMMIT_REF_SLUG}"
   only:
     refs:
