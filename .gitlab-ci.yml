@@ -10,9 +10,11 @@ stages:
     BUILDKITD_FLAGS: --oci-worker-no-process-sandbox 
     BUILDKIT_EXTRA_OPTS: ""
     TARGET_DOCKER_FILE: Dockerfile
+    SSL_CERT_DIR: /etc/ssl/certs
   before_script:
-    - mkdir -p /tmp/buildkit-certs
-    - echo "$CA_CERT" > /tmp/buildkit-certs/ca.crt
+    - mkdir -p /etc/ssl/certs
+    - cp /tmp/certs/ca.crt /usr/local/share/ca-certificates/registry.crt || true
+    - update-ca-certificates || true
   script:
     - test -n "${BUILD_CONTEXT_DIR}" || (echo "BUILD_CONTEXT_DIR is not set" && exit 1)
     - test -n "${TARGET_DOCKER_FILE}" || (echo "TARGET_DOCKER_FILE is not set" && exit 1)
@@ -34,7 +36,7 @@ stages:
         --local context="${CI_PROJECT_DIR}/${BUILD_CONTEXT_DIR}" \
         --local dockerfile="${CI_PROJECT_DIR}/${BUILD_CONTEXT_DIR}" \
         --opt filename="${TARGET_DOCKER_FILE}" \
-        --registry-auth-tlscontext host=https://13.250.126.255:5000,ca=/tmp/certs/ca.crt \
+        --registry-auth-tlscontext host=13.250.126.255:5000,ca=/tmp/certs/ca.crt \
         --export-cache type=registry,ref=$CACHE_IMAGE \
         --import-cache type=registry,ref=$CACHE_IMAGE \
         --opt platform=linux/amd64 \
