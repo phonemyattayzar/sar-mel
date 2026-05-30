@@ -34,10 +34,23 @@ stages:
         --output type=image,name=$IMAGE_NAME,push=true
 
 
-build:
-  <<: *template_build
+build:backend:
+  extends: .template-build
   variables:
-    TARGET_IMAGE_NAME: "${CI_PROJECT_PATH}"
+    BUILD_CONTEXT_DIR: backend
+    TARGET_IMAGE_NAME: "${CI_PROJECT_PATH}/backend"
     TARGET_IMAGE_TAG: "${CI_COMMIT_REF_SLUG}"
   only:
-    - main
+    refs:
+      - main
+
+
+build:frontend:
+  extends: .template-build
+  variables:
+    BUILD_CONTEXT_DIR: frontend
+    TARGET_IMAGE_NAME: "${CI_PROJECT_PATH}/frontend"
+    TARGET_IMAGE_TAG: "${CI_COMMIT_REF_SLUG}"
+  only:
+    refs:
+      - main
