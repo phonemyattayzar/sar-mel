@@ -37,7 +37,7 @@ build:backend:
   extends: .template-build
   variables:
     BUILD_CONTEXT_DIR: backend
-    TARGET_IMAGE_NAME: "${CI_PROJECT_PATH}/backend"
+    TARGET_IMAGE_NAME: "sar-mel/frontend"
     TARGET_IMAGE_TAG: "${CI_COMMIT_REF_SLUG}"
   only:
     refs:
@@ -48,7 +48,7 @@ build:frontend:
   extends: .template-build
   variables:
     BUILD_CONTEXT_DIR: frontend
-    TARGET_IMAGE_NAME: "${CI_PROJECT_PATH}/frontend"
+    TARGET_IMAGE_NAME: "sar-mel/frontend"
     TARGET_IMAGE_TAG: "${CI_COMMIT_REF_SLUG}"
   only:
     refs:
