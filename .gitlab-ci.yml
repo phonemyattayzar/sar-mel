@@ -11,8 +11,8 @@ stages:
     BUILDKIT_EXTRA_OPTS: ""
     TARGET_DOCKER_FILE: Dockerfile
   before_script:
-    - mkdir -p /etc/docker/certs.d/13.250.126.255:5000
-    - echo "$CA_CERT" > /etc/docker/certs.d/13.250.126.255:5000/ca.crt
+    - mkdir -p /tmp/buildkit-certs
+    - echo "$CA_CERT" > /tmp/buildkit-certs/ca.crt
   script:
     - test -n "${BUILD_CONTEXT_DIR}" || (echo "BUILD_CONTEXT_DIR is not set" && exit 1)
     - test -n "${TARGET_DOCKER_FILE}" || (echo "TARGET_DOCKER_FILE is not set" && exit 1)
@@ -30,6 +30,7 @@ stages:
     - echo "Building ${BUILD_CONTEXT_DIR}/${TARGET_DOCKER_FILE} → $IMAGE_NAME"
     - |
       buildctl-daemonless.sh build \
+        --registry-ca /tmp/buildkit-certs \
         --frontend dockerfile.v0 \
         --local context="${CI_PROJECT_DIR}/${BUILD_CONTEXT_DIR}" \
         --local dockerfile="${CI_PROJECT_DIR}/${BUILD_CONTEXT_DIR}" \
