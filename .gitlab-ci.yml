@@ -48,8 +48,8 @@ aws-login:
         export IMAGE_NAME="${TARGET_NAME_CLEAN}:${CLEAN_TAG}"
         export CACHE_IMAGE="${TARGET_NAME_CLEAN}:cache"
       else
-        export IMAGE_NAME="${REGISTRY_CLEAN}/${TARGET_NAME_CLEAN}:${CLEAN_TAG}"
-        export CACHE_IMAGE="${REGISTRY_CLEAN}/${TARGET_NAME_CLEAN}:cache"
+        export IMAGE_NAME="${REGISTRY_CLEAN}:${TARGET_NAME_CLEAN}-${CLEAN_TAG}"
+        export CACHE_IMAGE="${REGISTRY_CLEAN}:${TARGET_NAME_CLEAN}-cache"
       fi
     - echo "Building ${BUILD_CONTEXT_DIR}/${TARGET_DOCKER_FILE} → $IMAGE_NAME"
     - |
@@ -71,8 +71,8 @@ build:backend:
   extends: .template-build
   variables:
     BUILD_CONTEXT_DIR: backend
-    TARGET_IMAGE_NAME: "sar-mel/backend"
-    TARGET_IMAGE_TAG: "${CI_COMMIT_REF_SLUG}"
+    TARGET_IMAGE_NAME: "sar-mel-backend"
+    TARGET_IMAGE_TAG: "latest"
   only:
     refs:
       - main
@@ -82,8 +82,8 @@ build:frontend:
   extends: .template-build
   variables:
     BUILD_CONTEXT_DIR: frontend
-    TARGET_IMAGE_NAME: "sar-mel/frontend"
-    TARGET_IMAGE_TAG: "${CI_COMMIT_REF_SLUG}"
+    TARGET_IMAGE_NAME: "sar-mel-frontend"
+    TARGET_IMAGE_TAG: "latest"
   only:
     refs:
       - main
