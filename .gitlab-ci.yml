@@ -14,9 +14,10 @@ aws-login:
         echo "Error: AWS_DEFAULT_REGION or DEV_REGISTRY is not set."
         exit 1
       fi
+    - REGISTRY_HOST=$(echo -n "$DEV_REGISTRY" | cut -d/ -f1 | tr -d '\n')
     - PASSWORD=$(aws ecr get-login-password --region $AWS_DEFAULT_REGION)
     - AUTH=$(echo -n "AWS:$PASSWORD" | base64 | tr -d '\n')
-    - echo "{\"auths\":{\"$DEV_REGISTRY\":{\"auth\":\"$AUTH\"}}}" > .docker/config.json
+    - echo "{\"auths\":{\"$REGISTRY_HOST\":{\"auth\":\"$AUTH\"}}}" > .docker/config.json
   artifacts:
     paths:
       - .docker/config.json
