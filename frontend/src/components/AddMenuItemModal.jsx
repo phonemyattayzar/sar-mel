@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { X } from "lucide-react";
-import { API_BASE, parseApiError } from "../api/client";
+import { API_BASE, parseApiError, getImageUrl } from "../api/client";
 
 export default function AddMenuItemModal({
   showAddMenuItem,
@@ -107,7 +107,7 @@ export default function AddMenuItemModal({
             {menuItemForm.image_url ? (
               <div className="image-upload-preview-container">
                 <img
-                  src={menuItemForm.image_url}
+                  src={getImageUrl(menuItemForm.image_url)}
                   alt="Dish Preview"
                   className="image-upload-preview"
                 />
@@ -201,11 +201,10 @@ export default function AddMenuItemModal({
           </div>
 
           <button type="submit" className="btn btn-primary" style={{ width: "100%", marginTop: "16px" }}>
-            <span>Add Item to Menu</span>
+            <span>{menuItemForm.id ? "Update Menu Item" : "Add Item to Menu"}</span>
           </button>
         </form>
       </div>
     </div>
   );
 }
-

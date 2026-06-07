@@ -46,8 +46,8 @@ async def upload_menu_item_image(request: Request, file: UploadFile = File(...))
     with open(file_path, "wb") as buffer:
         shutil.copyfileobj(file.file, buffer)
         
-    # 4. Return the accessible URL
-    image_url = f"{request.base_url}static/uploads/{filename}"
+    # 4. Return the accessible path
+    image_url = f"/static/uploads/{filename}"
     return {"image_url": image_url}
 
 

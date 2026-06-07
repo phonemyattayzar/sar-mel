@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { X } from "lucide-react";
-import { API_BASE, apiRequest, parseApiError } from "../api/client";
+import { API_BASE, apiRequest, parseApiError, getImageUrl } from "../api/client";
 
 export default function EditMenuItemModal({
   showEditMenuItem,
@@ -182,7 +182,7 @@ export default function EditMenuItemModal({
             {imageUrl ? (
               <div className="image-upload-preview-container">
                 <img
-                  src={imageUrl}
+                  src={getImageUrl(imageUrl)}
                   alt="Dish Preview"
                   className="image-upload-preview"
                 />

@@ -5,6 +5,8 @@ import {
   Layers,
   Utensils,
   Clock,
+  PlusCircle,
+  MinusCircle,
   Plus,
   Minus,
   ShoppingCart,
@@ -13,7 +15,7 @@ import {
   Edit2,
   Trash2,
 } from "lucide-react";
-import { apiRequest, parseApiError } from "../api/client";
+import { apiRequest, parseApiError, getImageUrl } from "../api/client";
 import AddCouponModal from "./AddCouponModal";
 
 export default function RestaurantDetailView({
@@ -488,15 +490,13 @@ export default function RestaurantDetailView({
                         const qty = getCartQty(item.id);
                         return (
                           <div key={item.id} className="menu-item-card flex-row-card">
-                            {item.image_url && (
-                              <div className="menu-item-image-wrapper">
-                                <img
-                                  src={item.image_url}
-                                  alt={item.name}
-                                  className="menu-item-image"
-                                />
-                              </div>
-                            )}
+                            <div className="menu-item-image-wrapper">
+                              <img
+                                src={getImageUrl(item.image_url)}
+                                alt={item.name}
+                                className="menu-item-image"
+                              />
+                            </div>
                             <div className="menu-item-details">
                               <div>
                                 <div className="item-name">{item.name}</div>
@@ -548,7 +548,7 @@ export default function RestaurantDetailView({
                                       style={{ padding: "6px 14px", fontSize: "0.8125rem" }}
                                       onClick={() => onAddToCart(item)}
                                     >
-                                      <Plus size={14} />
+                                      <PlusCircle size={14} />
                                       <span>Add</span>
                                     </button>
                                   ) : (
@@ -558,7 +558,7 @@ export default function RestaurantDetailView({
                                         className="qty-btn"
                                         onClick={() => onUpdateCartQty(item.id, qty - 1)}
                                       >
-                                        <Minus size={14} />
+                                        <MinusCircle size={18} />
                                       </button>
                                       <span className="qty-value">{qty}</span>
                                       <button
@@ -566,7 +566,7 @@ export default function RestaurantDetailView({
                                         className="qty-btn"
                                         onClick={() => onAddToCart(item)}
                                       >
-                                        <Plus size={14} />
+                                        <PlusCircle size={18} />
                                       </button>
                                     </>
                                   )}

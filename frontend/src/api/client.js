@@ -3,6 +3,15 @@ export const API_BASE =
 
 const TOKEN_KEY = "access_token";
 
+export function getImageUrl(url) {
+  if (!url) return "https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=500&auto=format&fit=crop&q=60";
+  if (url.startsWith("http")) return url;
+  
+  // Remove /api/v1 from API_BASE to get the root backend URL
+  const backendRoot = API_BASE.replace("/api/v1", "");
+  return `${backendRoot}${url}`;
+}
+
 export function getToken() {
   return localStorage.getItem(TOKEN_KEY);
 }
