@@ -6,7 +6,12 @@ from app.api.v1.api import api_router
 from app.db import base  # Ensure all models are registered
 
 
-app = FastAPI(title="Food Ordering API")
+app = FastAPI(
+    title="Food Ordering API",
+    docs_url="/api/v1/docs",
+    redoc_url="/api/v1/redoc",
+    openapi_url="/api/v1/openapi.json"
+)
 
 # Configure CORS middleware
 app.add_middleware(
@@ -26,5 +31,7 @@ app.include_router(api_router, prefix="/api/v1")
 
 
 @app.get("/")
+@app.get("/api/v1")
+@app.get("/api/v1/")
 async def root():
     return {"message": "Mingalaba! Food API is running"}
