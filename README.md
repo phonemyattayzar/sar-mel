@@ -1,6 +1,6 @@
 # Food Ordering System (Sar Mel)
 
-A modern, full-stack Food Ordering System designed for scalability and professional deployment. This project features a robust FastAPI backend, a dynamic React frontend, and a fully automated CI/CD pipeline targeting AWS.
+This repository contains a full-stack Food Ordering System built with React and FastAPI. It serves as a practical example of a GitLab CI/CD pipeline that automatically builds Docker images, pushes them to Amazon ECR, and deploys them to Kubernetes. The project demonstrates containerized application development, image delivery workflows, registry authentication, and Kubernetes deployment in a real-world DevOps environment.
 
 ## 1. Project Overview
 
@@ -88,10 +88,25 @@ cp backend/.env.example backend/.env
 ```
 Update the `.env` with your local database credentials and secret keys.
 
+To generate the secret key
+```bash
+python -c "import secrets; print(secrets.token_urlsafe(32))"
+```
+
+Or
+
+```bash
+openssl rand -hex 32
+```
+
 ### Step 3: Start the Application
 Run the following command in the root directory:
 ```bash
 docker-compose up --build
+```
+And run to create tables
+```bash
+docker-compose exec backend alembic upgrade head
 ```
 
 ### Step 4: Verify Services
@@ -255,13 +270,4 @@ graph LR
 
 ---
 
-## 12. Security Best Practices
-
-- **Secret Management:** Never commit `.env` files. Use GitLab CI/CD masked variables for sensitive data.
-- **IAM Least-Privilege:** Only grant the minimum ECR permissions required for the CI/CD user.
-- **Container Scanning:** Enable ECR's "Scan on push" to detect vulnerabilities in your images.
-- **Non-Root Users:** The frontend Nginx container runs as the `nginx` user for security.
-- **Registry Security:** Use Private ECR repositories to ensure only authorized users can pull images.
-
----
 
