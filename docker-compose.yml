@@ -32,7 +32,7 @@ services:
   frontend:
     build:
       context: ./frontend
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     container_name: food_ui
     restart: always
     working_dir: /app
@@ -41,6 +41,8 @@ services:
       - /app/node_modules
     ports:
       - "5173:5173"
+    environment:
+      VITE_API_BASE: http://localhost:8000/api/v1
     depends_on:
       - web
 
